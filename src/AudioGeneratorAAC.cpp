@@ -195,19 +195,30 @@ done:
 
 bool AudioGeneratorAAC::begin(AudioFileSource *source, AudioOutput *output)
 {
-  if (!source) return false;
+    #define TAG "AudioGenAAC"
+  if (!source) {
+      ESP_LOGW(TAG, "#begin FAILS - no source");
+      return false;
+  }
   file = source;
-  if (!output) return false;
+  if (!output) {
+      ESP_LOGW(TAG, "#begin FAILS - no output");
+      return false;
+  }
   this->output = output;
-  if (!file->isOpen()) return false; // Error
+  if (!file->isOpen()) {
+      ESP_LOGW(TAG, "#begin FAILS - output not open");
+      return false; // Error
+  }
 
-  output->begin();
-  
+  bool output_begin= output->begin();
+    ESP_LOGV(TAG, "#begin output_begin()=%d", output_begin);
+
   // AAC always comes out at 16 bits
-  output->SetBitsPerSample(16);
- 
+  bool bits_per_sample_result = output->SetBitsPerSample(16);
+    ESP_LOGV(TAG, "#begin bits_per_sample_result=%d", bits_per_sample_result);
 
-  memset(buff, 0, buffLen);
+    memset(buff, 0, buffLen);
   memset(outSample, 0, 1024*2*sizeof(int16_t));
 
  
