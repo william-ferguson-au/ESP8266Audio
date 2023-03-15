@@ -22,6 +22,7 @@
 #define _AUDIOFILESOURCESPIFFS_H
 
 #include <Arduino.h>
+#include <SPIFFS.h>
 #include <FS.h>
 
 #include "AudioFileSource.h"
